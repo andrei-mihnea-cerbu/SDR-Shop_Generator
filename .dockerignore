@@ -1,0 +1,19 @@
+# Ignore node modules and build artifacts
+node_modules
+dist
+build
+
+# Ignore system/IDE files
+.vscode
+.idea
+.DS_Store
+
+# Ignore version control
+.git
+.gitignore
+
+# Logs and temp
+*.log
+logs
+*.bak
+tmp

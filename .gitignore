@@ -1,0 +1,59 @@
+# === Node Modules ===
+node_modules/
+**/node_modules/
+
+# === Python Cache ===
+__pycache__/
+**/__pycache__/
+*.py[cod]
+
+# === Build outputs ===
+dist/
+build/
+**/dist/
+**/build/
+
+# === TypeScript outputs ===
+*.tsbuildinfo
+**/*.tsbuildinfo
+
+# === Logs ===
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# === OS/IDE Files ===
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# === Misc ===
+coverage/
+.cache/
+tmp/
+temp/
+*.tgz
+*.bak
+
+# === UI/Vite ===
+UI/.vite
+UI/.output
+
+# === API ===
+API/coverage/
+API/.output/
+API/.turbo/
+
+# === Ignore CA cert mounts, secrets, keys (if applicable) ===
+*.crt
+*.pem
+*.key
+
+# Python specific
+venv/
+**/venv/
+.venv/

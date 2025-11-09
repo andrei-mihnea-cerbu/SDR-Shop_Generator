@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>{title}</title>
+    {metaTags}
+    <link rel="icon" type="image" href="{favicon_url}" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@200;400&&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      html,
+      body {
+        height: 100%;
+        background-color: #ffffff !important;
+        font-family: 'Roboto', sans-serif;
+        overflow-x: hidden;
+      }
+
+      /* === Scrollbar Styles === */
+      * {
+        scrollbar-width: thin;
+        scrollbar-color: #505050 #ffffff;
+      }
+
+      *::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+      }
+
+      *::-webkit-scrollbar-thumb {
+        background-color: rgba(255, 165, 0, 0.7);
+        border-radius: 6px;
+      }
+
+      *::-webkit-scrollbar-track {
+        background-color: #ffffff !important;
+      }
+      @keyframes gradientFlow {
+        0% {
+          background-position: 0% 50%;
+        }
+        25% {
+          background-position: 50% 100%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        75% {
+          background-position: 50% 0%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="./main.tsx"></script>
+  </body>
+</html>
