@@ -3,6 +3,4 @@ export interface Social {
   name: string;
   description: string;
   url: string;
-  originalUrl: string;
-  socialLabelsList: string[];
 }

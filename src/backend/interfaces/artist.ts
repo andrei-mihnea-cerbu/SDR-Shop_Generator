@@ -8,7 +8,7 @@ export interface Artist {
   id: string;
   name: string;
   type: ArtistType;
-  website: string;
+  website?: string;
   webmail: Webmail;
   logos: string[];
   favicons: string[];

@@ -90,7 +90,11 @@ const HomePage: React.FC = () => {
       {/* 🎸 Banner */}
       {shop && (
         <Banner
-          imageUrl={shop && shop.imageGallery[0] ? `${bucketUrl}/${shop.imageGallery[0]}` : ''}
+          imageUrl={
+            shop && shop.imageGallery[0]
+              ? `${bucketUrl}/${shop.imageGallery[0]}`
+              : ''
+          }
           mainTitle={`${shop.name} Shop`}
           subTitle="Find exclusive artist merchandise and support your favorite music!"
         />
