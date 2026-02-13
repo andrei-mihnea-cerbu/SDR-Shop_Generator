@@ -101,7 +101,9 @@ export class LocalDatabase {
 
   private async fetchAndStoreAll() {
     try {
-      const artistsRes = await this.http.get<ArtistApiDto[]>('/artists');
+      const artistsRes = await this.http.get<ArtistApiDto[]>('/artists', {
+        headers: { active: 'true' },
+      });
       const artists = artistsRes.status === 200 ? artistsRes.body : [];
       if (!artists.length) return;
 
