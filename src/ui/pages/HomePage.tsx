@@ -17,7 +17,7 @@ const HomePage: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const bucketUrl = import.meta.env.VITE_S3_PUBLIC_BASE_URL;
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -90,11 +90,7 @@ const HomePage: React.FC = () => {
       {/* 🎸 Banner */}
       {shop && (
         <Banner
-          imageUrl={
-            shop && shop.imageGallery[0]
-              ? `${bucketUrl}/${shop.imageGallery[0]}`
-              : ''
-          }
+          imageUrl={shop ? `${API_URL}/shops/${shop.id}/photo}` : ''}
           mainTitle={`${shop.name} Shop`}
           subTitle="Find exclusive artist merchandise and support your favorite music!"
         />

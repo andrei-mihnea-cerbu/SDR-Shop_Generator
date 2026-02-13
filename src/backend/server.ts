@@ -20,8 +20,7 @@ app.use(express.json());
 const INDEX_HTML_PATH = config.get('INDEX_HTML_PATH');
 const MAINTENANCE_HTML_PATH = config.get('MAINTENANCE_HTML_PATH');
 
-// 🪣 S3 Bucket base URL
-const S3_BASE_URL = config.get('S3_PUBLIC_BASE_URL');
+const API_URL = config.get('API_URL');
 
 // 🔒 CORS setup
 function wildcardToRegex(domain: string): RegExp[] {
@@ -107,19 +106,33 @@ app.get('/info', async (req: Request, res: Response) => {
     .replace(/\/$/, '')
     .toLowerCase();
 
-  try {
-    const allShops = db.getAllShops?.() || [];
-    const shop = allShops.find((s) => s.website.includes(host));
+  if (!host) {
+    res.status(400).json({ error: 'Missing host header' });
+    return;
+  }
 
-    if (!shop) {
-      console.warn(`❌ No shop found for host: ${host}`);
-      res.status(404).json({ error: 'Shop not found' });
+  try {
+    const artist = db.getArtistByWebsite(host);
+    if (!artist) {
+      res.status(404).json({ error: 'Artist not found' });
       return;
     }
 
-    res.status(200).json(shop);
+    const socials = db.getSocials(artist.id);
+    if (!socials || socials.length === 0) {
+      res.status(404).json({ error: 'Artist socials not found' });
+      return;
+    }
+
+    const latestReleases = db.getLatestReleases(artist.id);
+    if (!latestReleases) {
+      res.status(404).json({ error: 'Latest releases not found' });
+      return;
+    }
+
+    res.status(200).json({ artist, socials, latestReleases });
   } catch (error) {
-    console.error('❌ Failed to get shop info:', error);
+    console.error('❌ Failed to get artist info:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
@@ -127,27 +140,28 @@ app.get('/info', async (req: Request, res: Response) => {
 // 🌍 Catch-all for SEO rendering
 app.get(/.*/, async (req: Request, res: Response) => {
   let host = req.get('host') || '';
-  host = host
-    .replace(/^https?:\/\//, '')
-    .replace(/^www\./, '')
-    .replace(/\/$/, '')
-    .toLowerCase();
 
-  const allShops = db.getAllShops?.() || [];
-  const shop = allShops.find((s) => s.website.includes(host));
+  const parts = host.split('.');
+  if (parts.length > 2) {
+    host = parts.slice(-2).join('.');
+  }
 
-  if (!shop) {
-    console.warn(`❌ No shop found for host: ${host}`);
+  host = host.toLowerCase();
+
+  const artist = db.getArtistByWebsite(host);
+
+  if (!artist) {
+    console.warn(`❌ No artist found for host: ${host}`);
     res.sendStatus(404);
     return;
   }
 
-  // 🧩 Find artist and description
-  const artist = db.getAllArtists?.().find((a) => a.id === shop.artistId);
-  const artistDescription = db.getDescription(shop.artistId);
+  const shop = db.getShopByArtist(artist.id);
 
-  if (!artist) {
-    console.warn(`❌ No artist found for shop: ${shop.name}`);
+  if (!shop) {
+    console.warn(
+      `❌ No shop found for artist: ${artist.name} (ID: ${artist.id})`
+    );
     res.sendStatus(404);
     return;
   }
@@ -158,16 +172,13 @@ app.get(/.*/, async (req: Request, res: Response) => {
     defaultPageTitle: 'Welcome',
     indexHtmlPath: INDEX_HTML_PATH,
     maintenanceHtmlPath: MAINTENANCE_HTML_PATH,
-    faviconUrl: `https://${shop.website}/static/favicon.webp`,
+
+    faviconUrl: `https://${shop.website}/favicon.ico`,
     isServerDown: config.get('SERVER_MAINTENANCE_MODE') === 'true',
   });
 
   const url = `https://${req.get('host')}${req.originalUrl}`;
-
-  // 🪣 Resolve image from S3 bucket (fallback to full URL)
-  const rawImagePath = artistDescription?.imageGallery?.[0] || '';
-  const encodedPath = encodeURI(rawImagePath);
-  const imageUrl = `${S3_BASE_URL}/${encodedPath}`;
+  const imageUrl = encodeURI(`${API_URL}/shops/${shop.id}/photo`);
 
   let description = `Welcome to ${shop.name} — official shop of ${artist.name}. Discover exclusive merchandise and more!`;
   let customTitleSegment = '';

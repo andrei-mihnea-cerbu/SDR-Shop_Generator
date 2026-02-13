@@ -1,20 +1,39 @@
-export interface Webmail {
-  url: string;
-  email: string;
-  password: string;
-}
-
-export interface Artist {
+export interface ArtistRow {
   id: string;
   name: string;
-  type: ArtistType;
-  website?: string;
-  webmail: Webmail;
-  logos: string[];
-  favicons: string[];
+  type: string;
+  website: string | null;
+  bio: string | null;
+  isActive: number;
+  archivePath: string | null;
+  productionPrice: number;
+  hasAvatar: number;
+  hasLogo: number;
+  hasFavicon: number;
 }
 
-export enum ArtistType {
-  GROUP = 'group',
-  INDIVIDUAL = 'individual',
+export interface ArtistEntity {
+  id: string;
+  name: string;
+  type: string;
+  website?: string;
+  bio?: string;
+  isActive: boolean;
+  hasAvatar: boolean;
+  hasLogo: boolean;
+  hasFavicon: boolean;
+}
+
+export interface ArtistApiDto {
+  id: string;
+  name: string;
+  type: string;
+  website?: string;
+  isActive: boolean;
+  archivePath?: string;
+  bio?: string;
+  productionPrice: number;
+  avatarDataUri?: string;
+  logoDataUri?: string;
+  faviconDataUri?: string;
 }
