@@ -100,16 +100,13 @@ app.get('/robots.txt', (req: Request, res: Response) => {
 // 🧠 Shop info endpoint
 app.get('/info', async (req: Request, res: Response) => {
   let host = req.get('host') || '';
-  host = host
-    .replace(/^https?:\/\//, '')
-    .replace(/^www\./, '')
-    .replace(/\/$/, '')
-    .toLowerCase();
 
-  if (!host) {
-    res.status(400).json({ error: 'Missing host header' });
-    return;
+  const parts = host.split('.');
+  if (parts.length > 2) {
+    host = parts.slice(-2).join('.');
   }
+
+  host = host.toLowerCase();
 
   try {
     const artist = db.getArtistByWebsite(host);
@@ -118,19 +115,13 @@ app.get('/info', async (req: Request, res: Response) => {
       return;
     }
 
-    const socials = db.getSocials(artist.id);
-    if (!socials || socials.length === 0) {
-      res.status(404).json({ error: 'Artist socials not found' });
+    const shop = db.getShopByArtist(artist.id);
+    if (!shop) {
+      res.status(404).json({ error: 'Shop not found for artist' });
       return;
     }
 
-    const latestReleases = db.getLatestReleases(artist.id);
-    if (!latestReleases) {
-      res.status(404).json({ error: 'Latest releases not found' });
-      return;
-    }
-
-    res.status(200).json({ artist, socials, latestReleases });
+    res.status(200).json(shop);
   } catch (error) {
     console.error('❌ Failed to get artist info:', error);
     res.status(500).json({ error: 'Internal server error' });
