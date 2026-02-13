@@ -3,7 +3,7 @@ export interface Shop {
   artistId: string;
   name: string;
   website: string;
-  imageGallery: string[];
+  hasImage: boolean;
   shopFeed: string;
 }
 

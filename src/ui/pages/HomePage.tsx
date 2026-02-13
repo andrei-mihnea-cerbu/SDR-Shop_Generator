@@ -90,7 +90,9 @@ const HomePage: React.FC = () => {
       {/* 🎸 Banner */}
       {shop && (
         <Banner
-          imageUrl={shop ? `${API_URL}/shops/${shop.id}/photo}` : ''}
+          imageUrl={
+            shop && shop.hasImage ? `${API_URL}/shops/${shop.id}/photo` : ''
+          }
           mainTitle={`${shop.name} Shop`}
           subTitle="Find exclusive artist merchandise and support your favorite music!"
         />
